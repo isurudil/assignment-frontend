@@ -1,6 +1,6 @@
 package com.dev.frontend.panels.edit;
 
-import com.dev.frontend.entity.ApiEntity;
+import com.dev.frontend.entity.BaseEntity;
 import com.dev.frontend.panels.BusinessPresenter;
 import com.dev.frontend.panels.HasBusinessPresenter;
 import com.dev.frontend.panels.MenuPanel;
@@ -62,8 +62,8 @@ public class EditContainer extends JPanel implements ActionListener, HasBusiness
             Object currentObject = editPanel.guiToObject();
             try {
                 currentObject = Services.save(currentObject, objectType);
-                ApiEntity apiEntity = (ApiEntity) currentObject;
-                showNotification(apiEntity);
+                BaseEntity baseEntity = (BaseEntity) currentObject;
+                showNotification(baseEntity);
                 editPanel.bindToGUI(currentObject);
             } catch (Exception ee) {
                 ee.printStackTrace();
@@ -81,8 +81,8 @@ public class EditContainer extends JPanel implements ActionListener, HasBusiness
         }
     }
 
-    private void showNotification(ApiEntity apiEntity) {
-        if(apiEntity.getStatusCode().equals(StatusCodes.SUCCESS)){
+    private void showNotification(BaseEntity baseEntity) {
+        if(baseEntity.getStatusCode().equals(StatusCodes.SUCCESS)){
             JOptionPane.showMessageDialog(this, "Record Saved Successfully");
         }else {
             JOptionPane.showMessageDialog(this, "Record Not Saved");

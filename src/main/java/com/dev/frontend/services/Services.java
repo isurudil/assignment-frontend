@@ -1,12 +1,13 @@
 package com.dev.frontend.services;
 
-import com.dev.frontend.entity.ApiEntity;
+import com.dev.frontend.entity.BaseEntity;
 import com.dev.frontend.entity.Customer;
 import com.dev.frontend.entity.Product;
 import com.dev.frontend.panels.ComboBoxItem;
 import com.dev.frontend.util.ConnectionManager;
 import com.dev.frontend.util.PropertyLoader;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class Services {
                 url = PropertyLoader.getProperty("service.endpoint") + PropertyLoader.getProperty("service.add.sales.orders");
                 break;
         }
-        ApiEntity entity = ConnectionManager.POST(url, (ApiEntity) object);
+        BaseEntity entity = ConnectionManager.POST(url, (BaseEntity) object);
         logger.info("Response received from  API with status code : " + entity.getStatusCode()
                 + " and status message : " + entity.getStatusMessage());
         return entity;
@@ -128,12 +129,11 @@ public class Services {
         return objectList;
     }
 
-    public static double getProductPrice(String productCode) {
-        //TODO by the candidate
-		/*
-		 * This method is used to get unit price of product with the code passed as a parameter
-		 */
-        return 1;
+    public static double getProductPrice(String productCode) throws IOException {
+        String url =PropertyLoader.getProperty("service.endpoint")  + PropertyLoader.getProperty("service.get.product.unit") + "/" + productCode;
+        String jsonString = ConnectionManager.GET(url);
+        Product product= new Gson().fromJson(jsonString, Product.class);
+        return Double.parseDouble(product.getPrice().toString());
     }
 
     public static List objectMapper(String jsonString, Class aClass) throws IOException {

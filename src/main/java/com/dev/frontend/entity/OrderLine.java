@@ -2,7 +2,7 @@ package com.dev.frontend.entity;
 
 import java.math.BigDecimal;
 
-public class OrderLine extends ApiEntity{
+public class OrderLine extends BaseEntity {
 
     private int id;
     private String orderNumber;

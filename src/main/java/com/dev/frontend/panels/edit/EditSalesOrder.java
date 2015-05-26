@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -36,6 +37,7 @@ public class EditSalesOrder extends EditContentPanel
 	private JTextField txtQuantity = new JTextField();
 	private JButton btnAddLine = new JButton("Add");
 	private JComboBox<ComboBoxItem> txtProduct = new JComboBox<ComboBoxItem>();
+    private static Logger logger = Logger.getLogger(EditSalesOrder.class.getName());
 	private DefaultTableModel defaultTableModel = new DefaultTableModel(new String[] { "Product", "Qty", "Price", "Total" }, 0)
 	{
 
@@ -198,8 +200,13 @@ public class EditSalesOrder extends EditContentPanel
 
 		}
 		String productCode = comboBoxItem.getKey();
-		double price = Services.getProductPrice(productCode);
-		Integer qty = 0;
+        double price = 0;
+        try {
+            price = Services.getProductPrice(productCode);
+        } catch (IOException e) {
+            logger.info("Error occurred" + e.getMessage());
+        }
+        Integer qty = 0;
 		try
 		{
 			qty = Integer.parseInt(txtQuantity.getText());
@@ -216,14 +223,6 @@ public class EditSalesOrder extends EditContentPanel
 		txtTotalPrice.setText("" + currentValue);
 	}
 	
-	public boolean bindToGUI(Object o) {
-		// TODO by the candidate
-		/*
-		 * This method use the object returned by Services.readRecordByCode and should map it to screen widgets 
-		 */
-		return false;
-	}
-
 	public Object guiToObject() {
         SalesOrder salesOrder = new SalesOrder();
 
@@ -264,7 +263,12 @@ public class EditSalesOrder extends EditContentPanel
 		return txtOrderNum.getText();
 	}
 
-	public void clear()
+    @Override
+    public boolean bindToGUI(Object o) {
+        return false;
+    }
+
+    public void clear()
 	{
 		txtOrderNum.setText("");
 		txtCustomer.removeAllItems();

@@ -131,21 +131,7 @@ public class EditCustomer extends EditContentPanel
 		txtCurrentCredit.setColumns(10);
 	}
 
-	public boolean bindToGUI(Object object)
-	{
-        Customer customer = (Customer) object;
-        txtCode.setText(customer.getCode());
-        txtName.setText(customer.getName());
-        txtAddress.setText(customer.getAddress());
-        txtPhone1.setText(customer.getPhoneNo1());
-        txtPhone2.setText(customer.getPhoneNo2());
-        txtCreditLimit.setText(String.valueOf(customer.getCreditLimit()));
-        txtCurrentCredit.setText(String.valueOf(customer.getCurrentCredit()));
-
-		return false;
-	}
-
-	public Object guiToObject() 
+	public Object guiToObject()
 	{
         Customer customer = new Customer();
         customer.setCode(txtCode.getText());
@@ -171,7 +157,12 @@ public class EditCustomer extends EditContentPanel
 		return txtCode.getText();
 	}
 
-	public void clear() 
+    @Override
+    public boolean bindToGUI(Object o) {
+        return false;
+    }
+
+    public void clear()
 	{
 		txtCode.setText("");
 		txtName.setText("");

@@ -3,7 +3,7 @@ package com.dev.frontend.entity;
 import java.math.BigDecimal;
 import java.util.Set;
 
-public class SalesOrder extends ApiEntity{
+public class SalesOrder extends BaseEntity {
     private String orderNumber;
     private String customerCode;
     private BigDecimal totalPrice;

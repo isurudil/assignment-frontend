@@ -1,7 +1,7 @@
 package com.dev.frontend.util;
 
 
-import com.dev.frontend.entity.ApiEntity;
+import com.dev.frontend.entity.BaseEntity;
 import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,7 +22,7 @@ public class ConnectionManager {
 
     private static Logger logger = Logger.getLogger(ConnectionManager.class.getName());
 
-    public static ApiEntity POST(String url, ApiEntity apiEntity) throws IOException {
+    public static BaseEntity POST(String url, BaseEntity baseEntity) throws IOException {
         logger.info("Getting response from API");
 
         HttpClient httpClient = HttpClientBuilder.create().build();
@@ -32,7 +32,7 @@ public class ConnectionManager {
         Gson gson = new Gson();
         HttpPost post = new HttpPost(url);
         post.setConfig(requestConfig);
-        StringEntity postingString = new StringEntity(gson.toJson(apiEntity));
+        StringEntity postingString = new StringEntity(gson.toJson(baseEntity));
         post.setEntity(postingString);
         post.setHeader("Content-type", "application/json");
         HttpResponse response = httpClient.execute(post);
@@ -41,7 +41,7 @@ public class ConnectionManager {
         InputStream content = entity.getContent();
         String jsonString = convertInputStreamToString(content);
 
-        return new Gson().fromJson(jsonString, ApiEntity.class);
+        return new Gson().fromJson(jsonString, BaseEntity.class);
     }
 
 

@@ -2,7 +2,7 @@ package com.dev.frontend.entity;
 
 import java.math.BigDecimal;
 
-public class Product extends ApiEntity{
+public class Product extends BaseEntity {
 
     private String code;
     private String description;

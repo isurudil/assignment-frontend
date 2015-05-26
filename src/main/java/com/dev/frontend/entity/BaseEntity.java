@@ -1,9 +1,9 @@
 package com.dev.frontend.entity;
 
-public class ApiEntity {
+public class BaseEntity {
 
-    private String statusCode;
-    private String statusMessage;
+    protected String statusCode;
+    protected String statusMessage;
 
     public String getStatusCode() {
         return statusCode;

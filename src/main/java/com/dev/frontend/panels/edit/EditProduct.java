@@ -78,15 +78,6 @@ public class EditProduct extends EditContentPanel {
         txtQuantity.setColumns(10);
     }
 
-    public boolean bindToGUI(Object object) {
-        Product product = (Product) object;
-        txtCode.setText(product.getCode());
-        txtDescription.setText(product.getDescription());
-        txtPrice.setText(String.valueOf(product.getPrice()));
-        txtQuantity.setText(String.valueOf(product.getQuantity()));
-        return false;
-    }
-
     public Object guiToObject() {
         Product product = new Product();
         product.setPrice(new BigDecimal(txtPrice.getText()));
@@ -96,11 +87,6 @@ public class EditProduct extends EditContentPanel {
 
         logger.info("Set product from gui : { price :" + product.getPrice() + " description : " + product.getDescription() +
                 "code : " + product.getCode() + " quantity : " + product.getQuantity());
-        // TODO by the candidate
-        /*
-		 * This method collect values from screen widgets and convert them to object of your type
-		 * This object will be used as a parameter of method Services.save
-		 */
         return product;
     }
 
@@ -111,6 +97,11 @@ public class EditProduct extends EditContentPanel {
     @Override
     public String getCurrentCode() {
         return txtCode.getText();
+    }
+
+    @Override
+    public boolean bindToGUI(Object o) {
+        return false;
     }
 
     public void clear() {
