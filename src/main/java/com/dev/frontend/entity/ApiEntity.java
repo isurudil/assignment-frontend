@@ -2,8 +2,8 @@ package com.dev.frontend.entity;
 
 public class ApiEntity {
 
-    protected String statusCode;
-    protected String statusMessage;
+    private String statusCode;
+    private String statusMessage;
 
     public String getStatusCode() {
         return statusCode;

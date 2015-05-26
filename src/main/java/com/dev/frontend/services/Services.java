@@ -2,10 +2,10 @@ package com.dev.frontend.services;
 
 import com.dev.frontend.entity.ApiEntity;
 import com.dev.frontend.entity.Customer;
+import com.dev.frontend.entity.Product;
 import com.dev.frontend.panels.ComboBoxItem;
 import com.dev.frontend.util.ConnectionManager;
 import com.dev.frontend.util.PropertyLoader;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -35,6 +35,9 @@ public class Services {
             case 2:
                 url = PropertyLoader.getProperty("service.endpoint") + PropertyLoader.getProperty("service.add.customers");
                 break;
+            case 3:
+                url = PropertyLoader.getProperty("service.endpoint") + PropertyLoader.getProperty("service.add.sales.orders");
+                break;
         }
         ApiEntity entity = ConnectionManager.POST(url, (ApiEntity) object);
         logger.info("Response received from  API with status code : " + entity.getStatusCode()
@@ -45,7 +48,7 @@ public class Services {
     public static Object readRecordByCode(String code, int objectType) {
         //TODO by the candidate
         /*
-		 * This method is called when you select record in list view of any entity
+         * This method is called when you select record in list view of any entity
 		 * and also called after you save a record to re-bind the record again
 		 * the code parameter is the first column of the row you have selected
 		 * and the type is identifier of the object type and may be TYPE_PRODUCT ,
@@ -65,38 +68,64 @@ public class Services {
     }
 
     public static List<Object> listCurrentRecords(int objectType) throws IOException {
-        //TODO by the candidate
-		/*
-		 * This method is called when you open any list screen and should return all records of the specified type
-		 */
-        String url = null;
+        String url;
         List<Object> objectList = null;
         switch (objectType) {
             case 1:
-                url = PropertyLoader.getProperty("service.endpoint") + PropertyLoader.getProperty("service.get.all.products");
+                objectList = getAllProducts();
                 break;
             case 2:
-                url = PropertyLoader.getProperty("service.endpoint") + PropertyLoader.getProperty("service.get.all.customers");
-                String jsonString = ConnectionManager.GET(url);
-                objectList = objectMapper(jsonString, Customer.class);
-                Customer apiEntity = (Customer) objectList.get(0);
-                logger.info("Received list of objects , ApiEntity :" + apiEntity.getStatusCode());
+                objectList = getAllCustomers();
                 break;
         }
-//
-//        ApiEntity apiEntity = (ApiEntity) objectList.get(0);
-//
-//        logger.info("Received list of objects , ApiEntity :" + apiEntity.getStatusCode());
-        return objectList ;
+        return objectList;
     }
 
-    public static List<ComboBoxItem> listCurrentRecordRefernces(int objectType) {
+    public static List<ComboBoxItem> listCurrentRecordReferences(int objectType) throws IOException {
         //TODO by the candidate
 		/*
 		 * This method is called when a Combo Box need to be initialized and should
 		 * return list of ComboBoxItem which contains code and description/name for all records of specified type
 		 */
-        return new ArrayList<ComboBoxItem>();
+        String url;
+        List<Object> objectList = null;
+        ArrayList<ComboBoxItem> comboBoxItems = new ArrayList<>();
+
+        switch (objectType) {
+            case 1:
+                objectList = getAllProducts();
+                for (Object object : objectList){
+                    Product product = (Product) object;
+                    comboBoxItems.add(new ComboBoxItem(product.getCode(), product.getPrice().toString()));
+                }
+                    break;
+            case 2:
+                objectList = getAllCustomers();
+                for (Object object : objectList) {
+                    Customer customer = (Customer) object;
+                    comboBoxItems.add(new ComboBoxItem(customer.getCode(), customer.getName()));
+                }
+                break;
+        }
+        return comboBoxItems;
+    }
+
+    private static List<Object> getAllCustomers() throws IOException {
+        String url;
+        List<Object> objectList;
+        url = PropertyLoader.getProperty("service.endpoint") + PropertyLoader.getProperty("service.get.all.customers");
+        String jsonString = ConnectionManager.GET(url);
+        objectList = objectMapper(jsonString, Customer.class);
+        return objectList;
+    }
+
+    private static List<Object> getAllProducts() throws IOException {
+        String url;
+        List<Object> objectList;
+        url = PropertyLoader.getProperty("service.endpoint") + PropertyLoader.getProperty("service.get.all.products");
+        String jsonString = ConnectionManager.GET(url);
+        objectList = objectMapper(jsonString, Product.class);
+        return objectList;
     }
 
     public static double getProductPrice(String productCode) {

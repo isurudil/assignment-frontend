@@ -1,10 +1,12 @@
 package com.dev.frontend.panels;
 
-public interface BusinessPresenter 
+import java.io.IOException;
+
+public interface BusinessPresenter
 {
 	boolean bindToGUI(Object o);
 	void clear();
-	void onInit();
+	void onInit() throws IOException;
 	Object guiToObject();
 
 }

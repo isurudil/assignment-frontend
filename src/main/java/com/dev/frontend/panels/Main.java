@@ -3,7 +3,9 @@ package com.dev.frontend.panels;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,6 +23,7 @@ public class Main implements PanelSwitcher {
 	private JFrame frame;
 	private JPanel panel;
 	private HashMap<String, HasBusinessPresenter> containersMap = new HashMap<String, HasBusinessPresenter>();
+    private static Logger logger = Logger.getLogger(PanelSwitcher.class.getName());
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -73,8 +76,12 @@ public class Main implements PanelSwitcher {
 		if(container!=null)
 		{
 			container.getBusinessPresenter().clear();
-			container.getBusinessPresenter().onInit();
-		}
+            try {
+                container.getBusinessPresenter().onInit();
+            } catch (IOException e) {
+                logger.info("Error occurred while initializing");
+            }
+        }
 		layout.show(panel, name);
 	}
 

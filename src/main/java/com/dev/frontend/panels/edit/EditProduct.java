@@ -78,8 +78,8 @@ public class EditProduct extends EditContentPanel {
         txtQuantity.setColumns(10);
     }
 
-    public boolean bindToGUI(Object o) {
-        Product product = (Product) o;
+    public boolean bindToGUI(Object object) {
+        Product product = (Product) object;
         txtCode.setText(product.getCode());
         txtDescription.setText(product.getDescription());
         txtPrice.setText(String.valueOf(product.getPrice()));

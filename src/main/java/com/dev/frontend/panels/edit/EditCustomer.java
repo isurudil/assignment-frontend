@@ -131,9 +131,9 @@ public class EditCustomer extends EditContentPanel
 		txtCurrentCredit.setColumns(10);
 	}
 
-	public boolean bindToGUI(Object o) 
+	public boolean bindToGUI(Object object)
 	{
-        Customer customer = (Customer) o;
+        Customer customer = (Customer) object;
         txtCode.setText(customer.getCode());
         txtName.setText(customer.getName());
         txtAddress.setText(customer.getAddress());

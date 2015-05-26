@@ -6,7 +6,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,6 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
+import com.dev.frontend.entity.OrderLine;
+import com.dev.frontend.entity.SalesOrder;
 import com.dev.frontend.panels.ComboBoxItem;
 import com.dev.frontend.services.Services;
 import com.dev.frontend.services.Utils;
@@ -221,12 +225,33 @@ public class EditSalesOrder extends EditContentPanel
 	}
 
 	public Object guiToObject() {
-		// TODO by the candidate
-		/*
-		 * This method collect values from screen widgets and convert them to object of your type
-		 * This object will be used as a parameter of method Services.save
-		 */
-		return null;
+        SalesOrder salesOrder = new SalesOrder();
+
+        ComboBoxItem comboBoxItemCustomer = (ComboBoxItem) txtCustomer.getSelectedItem();
+        ComboBoxItem comboBoxItemProduct = (ComboBoxItem) txtProduct.getSelectedItem();
+
+        Set<OrderLine> orderLines = new HashSet<>();
+
+        int rowCount = defaultTableModel.getRowCount();
+        for(int i =0; i < rowCount; i++){
+            Vector dataVector = defaultTableModel.getDataVector();
+            Vector dataRow = (Vector) dataVector.get(i);
+            OrderLine orderLine = new OrderLine();
+            orderLine.setProductCode((String) dataRow.get(0));
+            orderLine.setQuantity(Integer.parseInt((String) dataRow.get(1)));
+            orderLine.setUnitPrice(new BigDecimal(comboBoxItemProduct.getValue()));
+            orderLine.setTotalPrice(new BigDecimal((String) dataRow.get(3)));
+            orderLine.setOrderNumber(txtOrderNum.getText());
+            orderLines.add(orderLine);
+        }
+
+        salesOrder.setCustomerCode(comboBoxItemCustomer.getKey());
+        salesOrder.setOrderNumber(txtOrderNum.getText());
+        salesOrder.setTotalPrice(new BigDecimal(txtTotalPrice.getText()));
+        salesOrder.setTotalPrice(new BigDecimal(txtTotalPrice.getText()));
+        salesOrder.setOrderLines(orderLines);
+
+        return salesOrder;
 	}
 
 	public int getObjectType()
@@ -249,13 +274,12 @@ public class EditSalesOrder extends EditContentPanel
 		defaultTableModel.setRowCount(0);
 	}
 
-	public void onInit()
-	{
-		List<ComboBoxItem> customers = Services.listCurrentRecordRefernces(Services.TYPE_CUSTOMER);
+	public void onInit() throws IOException {
+		List<ComboBoxItem> customers = Services.listCurrentRecordReferences(Services.TYPE_CUSTOMER);
 		for (ComboBoxItem item : customers)
 			txtCustomer.addItem(item);
 
-		List<ComboBoxItem> products = Services.listCurrentRecordRefernces(Services.TYPE_PRODUCT);
+		List<ComboBoxItem> products = Services.listCurrentRecordReferences(Services.TYPE_PRODUCT);
 		for (ComboBoxItem item : products)
 			txtProduct.addItem(item);
 	}
